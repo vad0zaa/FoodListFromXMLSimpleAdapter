@@ -1,7 +1,11 @@
 package ee.sinchukov.foodlistfromxmlsimpleadapter;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -15,6 +19,8 @@ import java.util.ArrayList;
 public class MainActivity extends ListActivity  {
 
     ArrayList<Food> foodsList = new ArrayList<Food>();
+    public static final String EXTRA_FOOD_ID = "ee.sinchukov.foodlistfromxmlsimpleadapter.FOOD_ID";
+    public static final String TAG = "MainActivity";
 
     String name;
     String price;
@@ -24,40 +30,16 @@ public class MainActivity extends ListActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        FoodXmlParser foodXmlParser = new FoodXmlParser();
 
         try {
             XmlPullParser foodsParser = getResources().getXml(R.xml.foods);
-            int eventType = foodsParser.getEventType();
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-
-                if (eventType==XmlPullParser.START_TAG) {
-                    if (foodsParser.getName().equals("name")) {
-                        foodsParser.next();
-                        name=foodsParser.getText();
-                    }
-                    else if (foodsParser.getName().equals("price")) {
-                        foodsParser.next();
-                        price=foodsParser.getText();
-                    }
-                    else if (foodsParser.getName().equals("calories")) {
-                        foodsParser.next();
-                        calories=foodsParser.getText();
-                    }
-                }
-                if (eventType==XmlPullParser.END_TAG && foodsParser.getName().equals("food")) {
-                    foodsList.add(new Food(name,price,calories));
-                }
-
-                eventType = foodsParser.next();
-            }
+            foodsList = foodXmlParser.getFoodArray(foodsParser);
         }
         catch (Throwable t) {
             Toast.makeText(this, "Error XML-file loading: " + t.toString(), Toast.LENGTH_LONG)
                     .show();
         }
-
 
         String[] from=new String[] { Food.NAME, Food.PRICE, Food.CALORIES };
         int[] to=new int[] {R.id.nameView, R.id.priceView, R.id.caloriesView };
@@ -65,6 +47,31 @@ public class MainActivity extends ListActivity  {
         ListAdapter adapter = new SimpleAdapter(this, foodsList, R.layout.activity_main,from,to);
         setListAdapter(adapter);
 
+
+        // click
+        AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                // получаем выбранный пункт
+                Food selectedFood = (Food)parent.getItemAtPosition(position);
+                // show info screen
+                Log.v(TAG, "show info activity");
+                showInfo(selectedFood.getId());
+            }
+        };
+        getListView().setOnItemClickListener(itemListener);
+
+    }
+
+    protected void showInfo(String foodId){
+        Intent intent = new Intent(this,InfoActivity.class);
+
+        // pass food id to info screen activity
+        intent.putExtra(MainActivity.EXTRA_FOOD_ID, foodId);
+        Log.v(TAG, "put EXTRA_FOOD_ID:"+ foodId);
+
+        //show info screen
+        startActivity(intent);
     }
 
 }
