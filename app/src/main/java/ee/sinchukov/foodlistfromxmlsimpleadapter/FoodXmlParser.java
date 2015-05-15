@@ -1,16 +1,11 @@
 package ee.sinchukov.foodlistfromxmlsimpleadapter;
 
-import android.widget.Toast;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by vsinchuk on 5/15/2015.
- */
 public class FoodXmlParser {
 
     String name;
@@ -34,15 +29,15 @@ public class FoodXmlParser {
                 currentFoodId = foodsParser.getAttributeValue(0);
                 if (currentFoodId.equals(foodId)) {
                     foodsParser.next();
-                    foodInformation.append(foodsParser.getText() +newLine);
+                    foodInformation.append(foodsParser.getText() + newLine);
                     foodsParser.next();
                     foodsParser.next();
                     foodsParser.next();
-                    foodInformation.append("Price: " + foodsParser.getText() +newLine +newLine);
+                    foodInformation.append("Price: " + foodsParser.getText() + newLine + newLine);
                     foodsParser.next();
                     foodsParser.next();
                     foodsParser.next();
-                    foodInformation.append( foodsParser.getText() +newLine);
+                    foodInformation.append(foodsParser.getText() + newLine);
                     foodsParser.next();
                     foodsParser.next();
                     foodsParser.next();
@@ -55,7 +50,7 @@ public class FoodXmlParser {
     }
 
     public ArrayList<Food> getFoodArray(XmlPullParser foodsParser) throws XmlPullParserException, IOException {
-        ArrayList<Food> foodsList = new ArrayList<Food>();
+        ArrayList<Food> foodsList = new ArrayList<>();
         int eventType = foodsParser.getEventType();
 
             while (eventType != XmlPullParser.END_DOCUMENT) {

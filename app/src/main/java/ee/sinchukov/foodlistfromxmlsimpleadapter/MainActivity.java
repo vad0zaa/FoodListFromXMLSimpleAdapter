@@ -18,13 +18,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends ListActivity  {
 
-    ArrayList<Food> foodsList = new ArrayList<Food>();
+    ArrayList<Food> foodsList = new ArrayList<>();
     public static final String EXTRA_FOOD_ID = "ee.sinchukov.foodlistfromxmlsimpleadapter.FOOD_ID";
     public static final String TAG = "MainActivity";
-
-    String name;
-    String price;
-    String calories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
